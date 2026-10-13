@@ -1,0 +1,68 @@
+// Prisma schema for TWS Local Business Audit Suite
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["business_audit", "public", "auth"]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+model BusinessAudit {
+  id                    String    @id @default(cuid())
+  slug                  String?   @unique @db.VarChar(150)
+  
+  // Client & Business Profile
+  businessName          String    @map("business_name") @db.VarChar(255)
+  category              String    @db.VarChar(100)
+  locality              String    @db.VarChar(255)
+  phone                 String?   @db.VarChar(50)
+  whatsappNumber        String?   @map("whatsapp_number") @db.VarChar(50)
+  mapsUrl               String?   @map("maps_url") @db.Text
+  auditorName           String    @default("Team TWS Field Auditor") @map("auditor_name") @db.VarChar(150)
+
+  // Overall Score & Diagnostic Status
+  totalScore            Int       @map("total_score")
+  maxScore              Int       @default(100) @map("max_score")
+  percentage            Int       @default(0)
+  bandTitle             String    @map("band_title") @db.VarChar(100)
+  bandRange             String    @map("band_range") @db.VarChar(50)
+  bandHeadline          String    @map("band_headline") @db.Text
+  bandDescription       String    @map("band_description") @db.Text
+  sprintRecommendation  String    @map("sprint_recommendation") @db.VarChar(200)
+  sprintDetails         String    @map("sprint_details") @db.Text
+
+  // 5-Pillar Dedicated Scores (Indexed for fast analytics & filtering)
+  mapsScore             Int       @default(0) @map("maps_score")
+  visualsScore          Int       @default(0) @map("visuals_score")
+  webScore              Int       @default(0) @map("web_score")
+  adsScore              Int       @default(0) @map("ads_score")
+  speedScore            Int       @default(0) @map("speed_score")
+
+  // Full Structured Payloads
+  sectionScores         Json      @map("section_scores")
+  answers               Json
+  findings              Json
+
+  // Engagement & Lifecycle
+  viewCount             Int       @default(0) @map("view_count")
+  lastViewedAt          DateTime? @map("last_viewed_at")
+  sharedViaWhatsAppAt   DateTime? @map("shared_via_whatsapp_at")
+  status                String    @default("active") @db.VarChar(50) // "active", "converted", "archived"
+
+  // Timestamps
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  @@map("audits")
+  @@schema("business_audit")
+  @@index([businessName])
+  @@index([whatsappNumber])
+  @@index([category])
+  @@index([totalScore])
+  @@index([createdAt])
+}
