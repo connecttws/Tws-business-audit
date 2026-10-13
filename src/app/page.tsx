@@ -99,7 +99,7 @@ export default function FieldAuditorPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 font-sans text-zinc-950">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-950">
       {/* Pinned Top Bar with Live Calculated Score */}
       <AuditorNav
         businessName={business.name}
@@ -146,10 +146,18 @@ export default function FieldAuditorPage() {
         onClose={() => setIsHistoryOpen(false)}
       />
 
-      {/* Minimal Monochrome Footer */}
-      <footer className="py-6 border-t border-zinc-200 bg-white text-center text-xs text-zinc-400 no-print">
-        <p className="font-mono tracking-wider uppercase text-[11px]">
-          TWS Local Business Intelligence · Field Diagnostic Suite v2.0
+      {/* Modern Refined Footer */}
+      <footer className="py-8 border-t border-slate-200/90 bg-white text-center text-xs text-slate-400 no-print space-y-1">
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-4 h-4 rounded bg-slate-950 text-white font-black text-[8px] flex items-center justify-center">
+            TWS
+          </div>
+          <p className="font-mono font-bold tracking-wider uppercase text-[11px] text-slate-600">
+            TWS Local Business Intelligence · Field Diagnostic Suite v2.0
+          </p>
+        </div>
+        <p className="text-[10px] text-slate-400 font-mono">
+          Proprietary 5-Pillar Local Algorithm
         </p>
       </footer>
     </div>

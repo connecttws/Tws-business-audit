@@ -31,11 +31,16 @@ function ReportContent({ record }: { record: AuditRecord }) {
       <ReportWhatsAppCta record={record} />
 
       {/* Report Footer */}
-      <div className="text-center py-8 text-xs text-zinc-400 space-y-1 font-mono">
-        <p className="font-bold text-zinc-700 uppercase tracking-wider text-[11px]">
-          Prepared by Team TWS · Local Business Intelligence & Growth
-        </p>
-        <p className="text-[10px] text-zinc-400">
+      <div className="text-center py-10 text-xs text-slate-400 space-y-1.5 font-mono">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <div className="w-5 h-5 rounded-md bg-slate-900 text-white font-black text-[9px] flex items-center justify-center">
+            TWS
+          </div>
+          <p className="font-extrabold text-slate-700 uppercase tracking-wider text-[11px]">
+            Team TWS · Local Business Intelligence & Growth
+          </p>
+        </div>
+        <p className="text-[11px] text-slate-400">
           Confidential Business Diagnostic Report · Ref {record.id}
         </p>
       </div>
@@ -45,7 +50,7 @@ function ReportContent({ record }: { record: AuditRecord }) {
 
 export default function CustomerReportPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 font-sans text-zinc-950">
+    <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-950">
       <Suspense
         fallback={
           <div className="min-h-screen flex flex-col items-center justify-center gap-3">

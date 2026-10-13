@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MessageSquare, Check } from "lucide-react";
+import { MessageSquare, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
 import { AuditRecord } from "@/lib/audit-data";
 
 interface ReportWhatsAppCtaProps {
@@ -22,47 +22,52 @@ export function ReportWhatsAppCta({ record }: ReportWhatsAppCtaProps) {
   };
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-zinc-200/90 shadow-md space-y-6 text-center sm:text-left">
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="space-y-2 flex-1">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-100 text-zinc-900 text-xs font-mono font-bold uppercase tracking-wider border border-zinc-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-            <span>Ready for Rapid Turnaround</span>
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-950 to-emerald-950 text-white p-7 sm:p-10 shadow-2xl border border-emerald-500/30 space-y-7">
+      {/* Ambient background glow */}
+      <div className="absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none bg-emerald-500/20" />
+
+      <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+        <div className="space-y-4 flex-1 text-center lg:text-left">
+          {/* Status pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-500/30">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span>TWS Turnaround Available · In-Person or WhatsApp</span>
           </div>
 
-          <h2 className="text-xl sm:text-2xl font-black text-zinc-950 tracking-tight font-sans">
-            Want Team TWS to implement these fixes for {record.business.name}?
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug">
+            Ready to turn these audit gaps into daily customer footfall?
           </h2>
 
-          <p className="text-xs sm:text-sm text-zinc-600 max-w-xl leading-relaxed">
-            Our team executes the complete local growth sprint: Google Maps 3-Pack rank acceleration, signature on-site ambient content shoots, and speed-to-lead automated funnels.
+          <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
+            Team TWS deploys the complete done-for-you growth system: Google Maps 3-Pack rank acceleration, high-impact signature on-site shoots, and automated speed-to-lead WhatsApp funnels.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-2 text-xs text-zinc-500 font-medium">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-1 text-xs text-slate-300 font-semibold">
             <span className="flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-black stroke-[3]" /> Done-For-You Execution
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Done-For-You Execution
             </span>
             <span className="flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-black stroke-[3]" /> 14-Day Sprint Timeline
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" /> 14-Day Rapid Sprint
             </span>
             <span className="flex items-center gap-1.5">
-              <Check className="w-3.5 h-3.5 text-black stroke-[3]" /> Measurable Local Inquiries
+              <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Tracked Local Inquiries
             </span>
           </div>
         </div>
 
-        {/* Big WhatsApp CTA Button */}
-        <div className="shrink-0 w-full sm:w-auto">
+        {/* Big WhatsApp Conversion Button */}
+        <div className="shrink-0 w-full sm:w-auto text-center">
           <button
             type="button"
             onClick={handleConnectWhatsApp}
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-black hover:bg-zinc-800 active:bg-zinc-900 text-white font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-xl transition-all cursor-pointer"
+            className="w-full sm:w-auto px-8 py-4.5 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center gap-3 shadow-[0_10px_25px_-5px_rgba(37,211,102,0.4)] transition-all cursor-pointer transform hover:-translate-y-0.5"
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>Discuss Audit on WhatsApp ↗</span>
+            <MessageSquare className="w-5 h-5 fill-slate-950 text-slate-950" />
+            <span>Chat with Team TWS on WhatsApp</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
-          <p className="text-[11px] text-zinc-400 font-mono text-center mt-2">
-            Direct chat with Team TWS Strategists
+          <p className="text-[11px] text-slate-400 font-mono mt-2.5">
+            Direct 1-on-1 strategy chat with TWS Field Lead
           </p>
         </div>
       </div>
