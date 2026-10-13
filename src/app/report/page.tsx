@@ -6,7 +6,6 @@ import { ReportHeader } from "@/components/report/ReportHeader";
 import { ReportCover } from "@/components/report/ReportCover";
 import { ReportBreakdown } from "@/components/report/ReportBreakdown";
 import { ReportFindings } from "@/components/report/ReportFindings";
-import { ReportActionPlan } from "@/components/report/ReportActionPlan";
 import { ReportWhatsAppCta } from "@/components/report/ReportWhatsAppCta";
 import { AuditRecord, SAMPLE_AUDIT } from "@/lib/audit-data";
 import { resolveAuditAsync } from "@/lib/audit-storage";
@@ -21,13 +20,10 @@ function ReportContent({ record }: { record: AuditRecord }) {
       {/* 2. 5-Pillar Score Breakdown */}
       <ReportBreakdown sectionScores={record.sectionScores} />
 
-      {/* 3. Action Plan & Prescribed TWS Solution */}
-      <ReportActionPlan record={record} />
-
-      {/* 4. Itemized 16-Point Findings Breakdown */}
+      {/* 3. Itemized 16-Point Findings Breakdown */}
       <ReportFindings findings={record.findings} />
 
-      {/* 5. Direct WhatsApp Conversion CTA */}
+      {/* 4. Direct WhatsApp Conversion CTA */}
       <ReportWhatsAppCta record={record} />
 
       {/* Report Footer */}
