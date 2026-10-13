@@ -74,6 +74,7 @@ export function encodeAuditForUrl(record: AuditRecord): string {
         record.business.whatsappNumber || record.business.phone || "",
         record.business.mapsUrl || "",
         record.business.auditorName || "",
+        record.business.clientName || "",
       ],
       a: record.answers,
     };
@@ -102,6 +103,7 @@ export function decodeAuditFromUrl(payloadStr: string): AuditRecord | null {
       whatsappNumber: minified.b[3],
       mapsUrl: minified.b[4],
       auditorName: minified.b[5],
+      clientName: minified.b[6] || undefined,
     };
     return calculateAudit(business, minified.a, minified.i);
   } catch (err) {

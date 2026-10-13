@@ -106,6 +106,12 @@ export function ReportCover({ record }: ReportCoverProps) {
                 <MapPin className="w-3.5 h-3.5 text-rose-400" />
                 <span>{record.business.locality}</span>
               </span>
+              {record.business.clientName && (
+                <span className="inline-flex items-center gap-1.5 bg-slate-800/90 hover:bg-slate-800 px-3 py-1 rounded-lg border border-slate-700/80 text-xs font-medium text-slate-200">
+                  <User className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Client: <strong>{record.business.clientName}</strong></span>
+                </span>
+              )}
               <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-bold ${theme.badgeBg}`}>
                 <StatusIcon className="w-3.5 h-3.5" />
                 <span>{theme.statusLabel}</span>

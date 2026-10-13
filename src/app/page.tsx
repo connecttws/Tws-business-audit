@@ -16,6 +16,7 @@ import { saveAudit, getAuditsList } from "@/lib/audit-storage";
 export default function FieldAuditorPage() {
   const [business, setBusiness] = useState<BusinessDetails>({
     name: "",
+    clientName: "",
     category: "Cafe / Restaurant",
     locality: "",
     phone: "",
@@ -87,6 +88,7 @@ export default function FieldAuditorPage() {
   const handleResetAudit = () => {
     setBusiness({
       name: "",
+      clientName: "",
       category: "Cafe / Restaurant",
       locality: "",
       phone: "",

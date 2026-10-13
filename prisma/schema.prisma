@@ -18,6 +18,7 @@ model BusinessAudit {
   
   // Client & Business Profile
   businessName          String    @map("business_name") @db.VarChar(255)
+  clientName            String?   @map("client_name") @db.VarChar(150)
   category              String    @db.VarChar(100)
   locality              String    @db.VarChar(255)
   phone                 String?   @db.VarChar(50)

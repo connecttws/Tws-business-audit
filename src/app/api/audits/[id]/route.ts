@@ -44,6 +44,7 @@ export async function GET(
       createdAt: record.createdAt.toISOString(),
       business: {
         name: record.businessName,
+        clientName: record.clientName || undefined,
         category: record.category,
         locality: record.locality,
         phone: record.phone || undefined,

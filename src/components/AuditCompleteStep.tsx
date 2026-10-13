@@ -18,6 +18,7 @@ import {
   Sparkles,
   MapPin,
   ArrowRight,
+  User,
 } from "lucide-react";
 import {
   AuditRecord,
@@ -79,7 +80,8 @@ export function AuditCompleteStep({
   const generateWhatsAppMessage = () => {
     return (
       `*Team TWS • Local Business Digital Audit*\n\n` +
-      `*Business:* ${record.business.name}\n` +
+      `*Business:* ${record.business.name}` +
+      (record.business.clientName ? ` (Client: ${record.business.clientName})\n` : `\n`) +
       `*Locality:* ${record.business.locality} (${record.business.category})\n` +
       `*Digital Health Score:* ${record.totalScore} / 100 — ${record.band.title}\n\n` +
       `*5-Pillar Score Breakdown:*\n` +
@@ -158,7 +160,7 @@ export function AuditCompleteStep({
 
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-slate-400 text-xs font-semibold">
+              <div className="flex flex-wrap items-center gap-2 text-slate-400 text-xs font-semibold">
                 <span className="flex items-center gap-1 bg-slate-800 px-2.5 py-0.5 rounded-md text-slate-300">
                   <Building className="w-3.5 h-3.5 text-sky-400" />
                   <span>{record.business.category}</span>
@@ -167,6 +169,12 @@ export function AuditCompleteStep({
                   <MapPin className="w-3.5 h-3.5 text-rose-400" />
                   <span>{record.business.locality}</span>
                 </span>
+                {record.business.clientName && (
+                  <span className="flex items-center gap-1 bg-slate-800 px-2.5 py-0.5 rounded-md text-slate-300">
+                    <User className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Client: <strong className="text-white">{record.business.clientName}</strong></span>
+                  </span>
+                )}
               </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white font-sans">
                 {record.business.name}

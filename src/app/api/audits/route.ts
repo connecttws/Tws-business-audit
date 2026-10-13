@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
     const saved = await prisma.businessAudit.create({
       data: {
         businessName: calculated.business.name.trim(),
+        clientName: calculated.business.clientName?.trim() || null,
         category: calculated.business.category || "Cafe / Restaurant",
         locality: calculated.business.locality.trim(),
         phone: calculated.business.phone || null,

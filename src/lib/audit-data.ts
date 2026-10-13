@@ -22,12 +22,25 @@ export interface AuditSection {
 
 export interface BusinessDetails {
   name: string;
+  clientName?: string;
   category: string;
   locality: string;
   phone?: string;
   whatsappNumber?: string;
   mapsUrl?: string;
   auditorName?: string;
+}
+
+export function formatTitleCase(input: string): string {
+  if (!input) return "";
+  return input
+    .trim()
+    .split(/\s+/)
+    .map((word) => {
+      if (!word) return "";
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
 }
 
 export function cleanPhoneNumber(rawPhone: string): string {

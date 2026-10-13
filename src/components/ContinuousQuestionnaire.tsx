@@ -5,6 +5,7 @@ import {
   AUDIT_SECTIONS,
   BusinessDetails,
   BUSINESS_CATEGORIES,
+  formatTitleCase,
 } from "@/lib/audit-data";
 import {
   Check,
@@ -15,6 +16,7 @@ import {
   ShieldAlert,
   Building,
   MapPin,
+  User,
   Camera,
   Globe,
   Target,
@@ -86,8 +88,39 @@ export function ContinuousQuestionnaire({
   );
   const [phoneError, setPhoneError] = useState("");
 
+  const [customCategories, setCustomCategories] = useState<string[]>([]);
+  const [showAddCustom, setShowAddCustom] = useState(false);
+  const [customInput, setCustomInput] = useState("");
+
   const answeredCount = Object.keys(answers).length;
   let globalQuestionCounter = 1;
+
+  // Load custom categories from local storage on mount
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem("tws_custom_categories");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) setCustomCategories(parsed);
+      }
+    } catch {}
+  }, []);
+
+  const handleAddCustomCategory = () => {
+    const formatted = formatTitleCase(customInput);
+    if (!formatted) return;
+
+    if (!customCategories.includes(formatted)) {
+      const updated = [...customCategories, formatted];
+      setCustomCategories(updated);
+      try {
+        localStorage.setItem("tws_custom_categories", JSON.stringify(updated));
+      } catch {}
+    }
+    onBusinessChange({ category: formatted });
+    setCustomInput("");
+    setShowAddCustom(false);
+  };
 
   const handleGenerateClick = () => {
     if (!business.name.trim()) {
@@ -125,6 +158,8 @@ export function ContinuousQuestionnaire({
     onGenerateReport();
   };
 
+  const standardCategories = BUSINESS_CATEGORIES.filter((c) => c.name !== "Other Business");
+
   return (
     <div className="space-y-8 pb-36">
       {/* 1. Sleek Business Setup Card */}
@@ -133,7 +168,7 @@ export function ContinuousQuestionnaire({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="text-xs font-bold uppercase tracking-wider text-slate-900 font-sans">
-              Business Profile
+              Business & Client Profile
             </span>
           </div>
           <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
@@ -141,8 +176,9 @@ export function ContinuousQuestionnaire({
           </span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-          {/* Business Name */}
+        {/* 2x2 Clean Responsive Grid for Desktop & Mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 1. Business Name */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center gap-1.5">
               <Building className="w-3.5 h-3.5 text-slate-400" />
@@ -153,11 +189,29 @@ export function ContinuousQuestionnaire({
               value={business.name}
               onChange={(e) => onBusinessChange({ name: e.target.value })}
               placeholder="e.g. Blue Bottle Cafe"
-              className="w-full px-3.5 py-3 rounded-xl border border-slate-250 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs"
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs"
             />
           </div>
 
-          {/* Locality */}
+          {/* 2. Client Name (Owner / Decision Maker) */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-slate-400" />
+                <span>Client Name</span>
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono">Owner / Manager</span>
+            </label>
+            <input
+              type="text"
+              value={business.clientName || ""}
+              onChange={(e) => onBusinessChange({ clientName: e.target.value })}
+              placeholder="e.g. Vikram Malhotra"
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs"
+            />
+          </div>
+
+          {/* 3. Locality / City */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-slate-400" />
@@ -168,18 +222,18 @@ export function ContinuousQuestionnaire({
               value={business.locality}
               onChange={(e) => onBusinessChange({ locality: e.target.value })}
               placeholder="e.g. Connaught Place, Central Delhi"
-              className="w-full px-3.5 py-3 rounded-xl border border-slate-250 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs"
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs"
             />
           </div>
 
-          {/* WhatsApp */}
+          {/* 4. Client WhatsApp */}
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5 flex items-center justify-between">
               <span className="flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-slate-400" />
                 <span>Client WhatsApp</span>
               </span>
-              <span className="text-[10px] text-slate-400 font-mono">optional</span>
+              <span className="text-[10px] text-slate-400 font-mono">1-tap report send</span>
             </label>
             <input
               type="tel"
@@ -191,24 +245,34 @@ export function ContinuousQuestionnaire({
                 })
               }
               placeholder="e.g. 98765 43210"
-              className="w-full px-3.5 py-3 rounded-xl border border-slate-250 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs font-mono"
+              className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50/70 text-base sm:text-sm font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:bg-white transition-all shadow-xs font-mono"
             />
           </div>
         </div>
 
-        {/* Category Pills */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-2">
-            Industry Category
-          </label>
+        {/* Industry Category Selector */}
+        <div className="space-y-2.5 pt-1">
+          <div className="flex items-center justify-between">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
+              Industry Category
+            </label>
+            <span className="text-xs font-mono font-semibold text-slate-500">
+              Selected: <strong className="text-slate-900">{business.category}</strong>
+            </span>
+          </div>
+
+          {/* Category Horizontal Pills */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none overscroll-x-contain touch-pan-x">
-            {BUSINESS_CATEGORIES.map((cat) => {
+            {standardCategories.map((cat) => {
               const isSelected = business.category === cat.name;
               return (
                 <button
                   key={cat.name}
                   type="button"
-                  onClick={() => onBusinessChange({ category: cat.name })}
+                  onClick={() => {
+                    onBusinessChange({ category: cat.name });
+                    setShowAddCustom(false);
+                  }}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                     isSelected
                       ? "bg-slate-950 text-white shadow-xs"
@@ -219,7 +283,105 @@ export function ContinuousQuestionnaire({
                 </button>
               );
             })}
+
+            {/* Custom Categories added by user */}
+            {customCategories.map((catName) => {
+              const isSelected = business.category === catName;
+              return (
+                <button
+                  key={catName}
+                  type="button"
+                  onClick={() => {
+                    onBusinessChange({ category: catName });
+                    setShowAddCustom(false);
+                  }}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                    isSelected
+                      ? "bg-slate-950 text-white shadow-xs"
+                      : "bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200"
+                  }`}
+                >
+                  <span>{catName}</span>
+                </button>
+              );
+            })}
+
+            {/* "+ Other Category" Button */}
+            <button
+              type="button"
+              onClick={() => setShowAddCustom(!showAddCustom)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 cursor-pointer flex items-center gap-1.5 border ${
+                showAddCustom
+                  ? "bg-emerald-600 text-white border-emerald-600"
+                  : "bg-slate-50 hover:bg-slate-100 text-slate-800 border-dashed border-slate-300"
+              }`}
+            >
+              <span>{showAddCustom ? "Close Custom" : "+ Other Industry"}</span>
+            </button>
           </div>
+
+          {/* Custom Category Input Form */}
+          {showAddCustom && (
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/90 space-y-3 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Add New Industry Category</span>
+                </span>
+                <span className="text-[10px] font-mono text-slate-400">
+                  Auto-formats to Title Case
+                </span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="text"
+                  autoFocus
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddCustomCategory();
+                    }
+                  }}
+                  placeholder="e.g. pet clinic, dental, dry cleaners, auto spa..."
+                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-base sm:text-xs font-semibold text-slate-950 placeholder:text-slate-400 focus:outline-none focus:border-slate-950 transition-colors shadow-xs"
+                />
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddCustomCategory}
+                    disabled={!customInput.trim()}
+                    className="px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-black disabled:opacity-40 text-white text-xs font-bold tracking-wider uppercase transition-colors shrink-0 cursor-pointer"
+                  >
+                    Add & Select
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddCustom(false);
+                      setCustomInput("");
+                    }}
+                    className="px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
+              {/* Real-time Title Case Preview */}
+              {customInput.trim() && (
+                <div className="flex items-center gap-2 text-xs font-mono text-slate-600 bg-white p-2 rounded-lg border border-slate-200/80">
+                  <span className="text-slate-400">Title Case Saved As:</span>
+                  <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                    "{formatTitleCase(customInput)}"
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
