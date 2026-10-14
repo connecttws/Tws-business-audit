@@ -25,7 +25,7 @@ import {
   formatWhatsAppUrl,
   isValidIndianMobile,
 } from "@/lib/audit-data";
-import { encodeAuditForUrl, saveAuditToStorage } from "@/lib/audit-storage";
+import { saveAuditToStorage } from "@/lib/audit-storage";
 
 interface AuditCompleteStepProps {
   record: AuditRecord;
@@ -46,14 +46,11 @@ export function AuditCompleteStep({
   const [showMessagePreview, setShowMessagePreview] = useState(false);
   const [wasSent, setWasSent] = useState(false);
 
-  // Generate cross-device encoded string
-  const encodedPayload = encodeAuditForUrl(record);
-
-  // Base report link
+  // Clean short report URL (/r/[id])
   const reportUrl =
     typeof window !== "undefined"
-      ? `${window.location.origin}/report?id=${record.id}&d=${encodedPayload}`
-      : `/report?id=${record.id}`;
+      ? `${window.location.origin}/r/${record.id}`
+      : `/r/${record.id}`;
 
   const cleanDigits = (clientPhone || "").replace(/\D/g, "");
   const isPhoneValid = isValidIndianMobile(clientPhone);
@@ -289,7 +286,7 @@ export function AuditCompleteStep({
             </button>
 
             <Link
-              href={`/report?id=${record.id}&d=${encodedPayload}`}
+              href={`/report?id=${record.id}`}
               target="_blank"
               className="p-4 rounded-2xl bg-slate-900 hover:bg-slate-950 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 border border-slate-800 transition-all text-center cursor-pointer shadow-sm"
             >

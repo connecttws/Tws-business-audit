@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
       data: {
         businessName: calculated.business.name.trim(),
         clientName: calculated.business.clientName?.trim() || null,
+        slug: calculated.id || null,
         category: calculated.business.category || "Cafe / Restaurant",
         locality: calculated.business.locality.trim(),
         phone: calculated.business.phone || null,
@@ -61,15 +62,31 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({
-      success: true,
-      audit: {
-        ...calculated,
+    const shortUrl = `/r/${saved.id}`;
+    const fullUrl = `/report?id=${saved.id}`;
+    const token = Buffer.from(`${saved.id}:${saved.createdAt.getTime()}`).toString("base64");
+
+    return NextResponse.json(
+      {
+        success: true,
+        audit: {
+          ...calculated,
+          id: saved.id,
+          createdAt: saved.createdAt.toISOString(),
+        },
         id: saved.id,
-        createdAt: saved.createdAt.toISOString(),
+        shortUrl,
+        fullUrl,
+        token,
       },
-      id: saved.id,
-    });
+      {
+        headers: {
+          "X-Audit-ID": saved.id,
+          "X-Audit-Short-URL": shortUrl,
+          "X-Audit-Token": token,
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Error creating audit record:", error);
     return NextResponse.json(

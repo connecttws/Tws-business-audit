@@ -1,21 +1,28 @@
 "use client";
 
 import React from "react";
-import { MessageSquare, CheckCircle2, ArrowRight, Sparkles } from "lucide-react";
+import { MessageSquare, CheckCircle2, ArrowRight, PhoneCall, ShieldCheck } from "lucide-react";
 import { AuditRecord } from "@/lib/audit-data";
 
 interface ReportWhatsAppCtaProps {
   record: AuditRecord;
 }
 
+const TWS_SUPPORT_PHONE = "917275895385";
+const TWS_DISPLAY_PHONE = "+91 7275895385";
+
 export function ReportWhatsAppCta({ record }: ReportWhatsAppCtaProps) {
   const handleConnectWhatsApp = () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const shortUrl = `${origin}/r/${record.id}`;
+
     const text =
       `Hi Team TWS! I reviewed our digital audit report for *${record.business.name}* (Score: ${record.totalScore}/100, Ref: ${record.id}).\n\n` +
-      `We would like to discuss implementing the recommended *${record.band.sprintRecommendation}* to fix our digital gaps. Please let us know your availability for a quick walkthrough.`;
+      `*Our Audit Report:* ${shortUrl}\n\n` +
+      `We would like to discuss implementing the recommended growth sprint to fix our digital gaps. Please let us know your availability for a quick walkthrough.`;
 
     window.open(
-      `https://wa.me/?text=${encodeURIComponent(text)}`,
+      `https://wa.me/${TWS_SUPPORT_PHONE}?text=${encodeURIComponent(text)}`,
       "_blank",
       "noopener,noreferrer"
     );
@@ -28,10 +35,10 @@ export function ReportWhatsAppCta({ record }: ReportWhatsAppCtaProps) {
 
       <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
         <div className="space-y-4 flex-1 text-center lg:text-left">
-          {/* Status pill */}
+          {/* Status pill with TWS contact badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold uppercase tracking-wider border border-emerald-500/30">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>TWS Turnaround Available · In-Person or WhatsApp</span>
+            <span>TWS Direct Helpline · {TWS_DISPLAY_PHONE}</span>
           </div>
 
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-snug">
@@ -56,19 +63,21 @@ export function ReportWhatsAppCta({ record }: ReportWhatsAppCtaProps) {
         </div>
 
         {/* Big WhatsApp Conversion Button */}
-        <div className="shrink-0 w-full sm:w-auto text-center">
+        <div className="shrink-0 w-full sm:w-auto text-center space-y-2">
           <button
             type="button"
             onClick={handleConnectWhatsApp}
             className="w-full sm:w-auto px-8 py-4.5 rounded-2xl bg-[#25D366] hover:bg-[#20ba5a] active:bg-[#1da851] text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center gap-3 shadow-[0_10px_25px_-5px_rgba(37,211,102,0.4)] transition-all cursor-pointer transform hover:-translate-y-0.5"
           >
             <MessageSquare className="w-5 h-5 fill-slate-950 text-slate-950" />
-            <span>Chat with Team TWS on WhatsApp</span>
+            <span>Chat on WhatsApp ({TWS_DISPLAY_PHONE})</span>
             <ArrowRight className="w-4 h-4" />
           </button>
-          <p className="text-[11px] text-slate-400 font-mono mt-2.5">
-            Direct 1-on-1 strategy chat with TWS Field Lead
-          </p>
+          <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 font-mono">
+            <span>Direct link with audit report attached</span>
+            <span>·</span>
+            <span className="text-emerald-400 font-bold">Fast Reply</span>
+          </div>
         </div>
       </div>
     </div>

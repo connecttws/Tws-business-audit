@@ -19,11 +19,13 @@ export function ReportHeader({ record }: ReportHeaderProps) {
   };
 
   const handleShareWhatsApp = () => {
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const shortUrl = `${origin}/r/${record.id}`;
     const text =
       `*Team TWS • Local Business Audit Report*\n` +
       `*Business:* ${record.business.name}\n` +
       `*Digital Score:* ${record.totalScore} / 100 (${record.band.title})\n\n` +
-      `View your complete report: ${window.location.href}\n\n` +
+      `View your complete report: ${shortUrl}\n\n` +
       `_Prepared by Team TWS._`;
     window.open(
       `https://wa.me/?text=${encodeURIComponent(text)}`,
@@ -34,7 +36,9 @@ export function ReportHeader({ record }: ReportHeaderProps) {
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      const origin = typeof window !== "undefined" ? window.location.origin : "";
+      const shortUrl = `${origin}/r/${record.id}`;
+      await navigator.clipboard.writeText(shortUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {

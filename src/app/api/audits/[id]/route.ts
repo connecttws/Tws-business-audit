@@ -16,9 +16,11 @@ export async function GET(
       );
     }
 
-    // Find audit record
-    const record = await prisma.businessAudit.findUnique({
-      where: { id },
+    // Find audit record by id or slug
+    const record = await prisma.businessAudit.findFirst({
+      where: {
+        OR: [{ id }, { slug: id }],
+      },
     });
 
     if (!record) {
@@ -31,7 +33,7 @@ export async function GET(
     // Asynchronously increment view count without blocking response
     prisma.businessAudit
       .update({
-        where: { id },
+        where: { id: record.id },
         data: {
           viewCount: { increment: 1 },
           lastViewedAt: new Date(),
@@ -70,10 +72,27 @@ export async function GET(
       findings: record.findings as any,
     };
 
-    return NextResponse.json({
-      success: true,
-      audit: formatted,
-    });
+    const token = Buffer.from(`${record.id}:${record.createdAt.getTime()}`).toString("base64");
+    const shortUrl = `/r/${record.id}`;
+    const fullUrl = `/report?id=${record.id}`;
+
+    return NextResponse.json(
+      {
+        success: true,
+        audit: formatted,
+        shortUrl,
+        fullUrl,
+        token,
+      },
+      {
+        headers: {
+          "X-Audit-ID": record.id,
+          "X-Audit-Token": token,
+          "X-Audit-Short-URL": shortUrl,
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
+    );
   } catch (error: any) {
     console.error("Error retrieving audit record:", error);
     return NextResponse.json(
